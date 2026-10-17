@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  user-select: none; /* 桌面装饰层默认禁选，但表单控件需可编辑（见下方放开） */
+  overflow: hidden;
+}
+
+/* R2 修复：输入框/文本域失效根因 —— body 的 user-select:none 会继承到表单控件，
+   导致点击无光标、无法输入（只能粘贴）。这里对所有可编辑控件放开文本选择，
+   并显式保证可聚焦、可点击。 */
+input,
+textarea,
+select,
+[contenteditable='true'],
+[contenteditable=''] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  pointer-events: auto !important;
+  cursor: text;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #d4a843;
+  outline-offset: 1px;
+}
+
+/* 卡牌基础样式 */
+.card {
+  width: 70px;
+  height: 100px;
+  background: #f8f5f0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card.selected {
+  transform: translateY(-12px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.card-back {
+  background: linear-gradient(135deg, #1a6b3c, #0f4d2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4a843;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.card-red { color: #d32f2f; }
+.card-black { color: #212121; }
+
+/* 桌子背景：跟随主题 CSS 变量（由 App 按当前主题注入 --table-bg），
+   不再硬编码绿色，确保切换 15 套主题时整页背景正确生效 */
+.table-bg {
+  background: var(--table-bg, radial-gradient(ellipse at center, #1a6b3c 0%, #0f4d2a 100%));
+}
+
+/* 按钮样式 */
+.btn-primary {
+  @apply bg-gold hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors;
+}
+
+/* 发牌动画 */
+@keyframes dealFly {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* 出牌弹出动画 */
+@keyframes cardPlay {
+  0% {
+    transform: translateY(0) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 炸弹闪光 */
+@keyframes bombFlash {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 底牌翻转动画 */
+@keyframes flipCard {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
+/* 思考点动画 */
+@keyframes thinkingDots {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.thinking-dots span {
+  animation: thinkingDots 1.4s infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* —— 互动系统（R5/R6/R7）动画 —— */
+/* 飞行动作：番茄🍅 / 水桶🪣 / 鲜花🌹 从发起座位飞向目标座位 */
+@keyframes flyAction {
+  0%   { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(1.4) rotate(var(--rot, 360deg)); opacity: 0; }
+}
+.fly-action {
+  animation: flyAction var(--fly-dur, 1.1s) cubic-bezier(.4,.1,.3,1) forwards;
+  will-change: transform, opacity;
+}
+
+/* 话术气泡弹出 */
+@keyframes bubblePop {
+  0%   { transform: translateY(8px) scale(0.85); opacity: 0; }
+  12%  { transform: translateY(0) scale(1); opacity: 1; }
+  88%  { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-6px) scale(0.95); opacity: 0; }
+}
+.chat-bubble {
+  animation: bubblePop var(--bubble-dur, 4s) ease-in-out forwards;
+  will-change: transform, opacity;
+}
+
+/* 码字（typing）抖动小点 */
+@keyframes typingBlink {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+.typing-dots span {
+  animation: typingBlink 1s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
