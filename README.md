@@ -14,6 +14,9 @@ AI 驱动的智能斗地主桌面游戏 —— 严格还原《欢乐斗地主》
 - **AI 嘲讽（R6）**：某玩家牌打得特别臭时，AI 会发送固定话术嘲讽；AI 之间、玩家与 AI 之间只能通过固定的几个话语交流，不能直接自由聊天
 - **动作系统（R7）**：玩家与 AI 可互相做动作 —— 扔番茄 🍅、倒水桶 🪣、送鲜花 🌹（严格对应《欢乐斗地主》的三种互动物品）；牌打得特别差时 AI 也会对对方做这些动作
 - **严格还原（R8）**：所有话术 / 动作 / 音效均贴合《欢乐斗地主》已知公开体系，不杜撰、不瞎编
+- **嘲讽语音自定义（新增）**：在「设置 → 编辑嘲讽语音」中可逐条增删改嘲讽话术，并实时试听；支持调整语速 / 音高。AI 嘲讽时用浏览器 TTS 朗读当前话术（自定义优先，留空则回退默认话术库）
+- **无边框窗口 + 自定义标题栏（新增）**：桌面端采用 `frame: false` 无边框窗口，由软件自绘标题栏（最小化 / 最大化 / 关闭 + 拖拽区），配色跟随主题，不再是系统原生窗口
+- **获取模型 / 调用修复（新增）**：所有外部 LLM 请求改由 Electron 主进程 Node `fetch` 发起（IPC 桥接），彻底规避渲染进程 CORS 导致的「获取模型失败 / 点一下秒报错」问题；OpenAI / Claude / Gemini 三种提供商的获取模型与对话均已走主进程通道
 
 ## 技术栈
 
@@ -81,10 +84,14 @@ landlord-ai/
 │   │   └── game-store.ts  # 状态 + 互动方法（triggerUrge/triggerTaunt/triggerAction）
 │   ├── ui/
 │   │   ├── pages/         # 含 ModelCenterPage（模型配置中心）
-│   │   └── components/    # 含 InteractionLayer（气泡/码字/飞行动画）、OpponentPanel（动作按钮）
-│   └── electron/         # Electron 主进程
+│   │   └── components/    # 含 InteractionLayer（气泡/码字/飞行动画）、OpponentPanel（动作按钮）、TauntEditorModal、TitleBar
+│   └── lib/
+│       └── electron-http.ts  # 渲染进程 HTTP 桥（经主进程 Node fetch 规避 CORS）
+├── electron/
+│   ├── main.cjs          # Electron 主进程（无边框窗口 / HTTP 桥 / 窗口控制）
+│   └── preload.cjs       # 安全暴露 API 给渲染进程
 ├── assets/               # 音频、图片资源
-├── scripts/              # 工具脚本（含 github-init）
+├── scripts/              # 工具脚本（含 github-init / push-via-api）
 └── tests/                # 单元测试
 ```
 

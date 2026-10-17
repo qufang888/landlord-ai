@@ -5,6 +5,7 @@
 import {
   LLMProvider, LLMRequest, LLMResponse, LLMConfig, parseJsonResponse,
 } from './provider';
+import { electronFetch } from '../lib/electron-http';
 
 export class OpenAIAdapter implements LLMProvider {
   name = 'openai';
@@ -44,7 +45,7 @@ export class OpenAIAdapter implements LLMProvider {
         body.response_format = { type: 'json_object' };
       }
 
-      const res = await fetch(`${this.baseUrl}/chat/completions`, {
+      const res = await electronFetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,6 +53,7 @@ export class OpenAIAdapter implements LLMProvider {
         },
         body: JSON.stringify(body),
         signal: controller.signal,
+        timeout: params.timeout || this.defaultTimeout,
       });
 
       if (!res.ok) {

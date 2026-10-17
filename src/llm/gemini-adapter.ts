@@ -4,6 +4,7 @@
 import {
   LLMProvider, LLMRequest, LLMResponse, LLMConfig, parseJsonResponse,
 } from './provider';
+import { electronFetch } from '../lib/electron-http';
 
 export class GeminiAdapter implements LLMProvider {
   name = 'gemini';
@@ -47,11 +48,12 @@ export class GeminiAdapter implements LLMProvider {
       }
 
       const url = `${this.baseUrl}/models/${this.model}:generateContent?key=${this.apiKey}`;
-      const res = await fetch(url, {
+      const res = await electronFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         signal: controller.signal,
+        timeout: params.timeout || this.defaultTimeout,
       });
 
       if (!res.ok) {

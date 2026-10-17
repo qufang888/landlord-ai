@@ -163,14 +163,18 @@ class SoundSynthesizer {
     this.bgmScene = null;
   }
 
-  /** 用浏览器 TTS 朗读中文（报牌语音） */
-  speak(text: string, volume = 1): void {
+  /** 用浏览器 TTS 朗读（报牌语音 / 嘲讽语音）。
+   *  opts.rate：语速 0.5~2（默认 1.1）
+   *  opts.pitch：音高 0~2（默认 1.0）
+   */
+  speak(text: string, volume = 1, opts?: { rate?: number; pitch?: number }): void {
     try {
       if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'zh-CN';
       u.volume = Math.max(0, Math.min(1, volume));
-      u.rate = 1.1;
+      u.rate = opts?.rate ?? 1.1;
+      u.pitch = opts?.pitch ?? 1.0;
       // 优先选择中文语音
       const voices = window.speechSynthesis.getVoices();
       const zh = voices.find(v => v.lang?.toLowerCase().startsWith('zh'));

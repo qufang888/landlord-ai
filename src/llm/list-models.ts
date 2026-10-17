@@ -4,6 +4,7 @@
  */
 import { LLMConfig } from './provider';
 import { createLLMProvider } from './index';
+import { electronFetch } from '../lib/electron-http';
 
 /** 测试连接：发送一条最小请求，验证鉴权与连通性 */
 export async function testConnection(config: LLMConfig): Promise<{ ok: boolean; message: string }> {
@@ -21,22 +22,19 @@ export async function testConnection(config: LLMConfig): Promise<{ ok: boolean; 
 export async function fetchModels(config: LLMConfig): Promise<string[]> {
   const { providerType, apiKey, baseUrl } = config;
   const timeout = 15000;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
 
-  try {
-    // OpenAI 原生 + 兼容（OpenAI 协议）
+  // OpenAI 原生 + 兼容（OpenAI 协议）
     if (providerType === 'openai_native' || providerType === 'openai_compatible') {
       const url = `${baseUrl}/models`.replace(/\/+$/, '');
-      const res = await fetch(url, {
+      const res = await electronFetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        signal: controller.signal,
+        timeout,
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       const data = await res.json();
       const list: any[] = data.data || data.models || [];
       return list.map(m => m.id || m.name || m.model).filter(Boolean).sort();
@@ -46,15 +44,15 @@ export async function fetchModels(config: LLMConfig): Promise<string[]> {
     if (providerType === 'claude_native' || providerType === 'claude_compatible') {
       const base = (baseUrl || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
       const url = `${base}/models`;
-      const res = await fetch(url, {
+      const res = await electronFetch(url, {
         method: 'GET',
         headers: {
           'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
         },
-        signal: controller.signal,
+        timeout,
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       const data = await res.json();
       const list: any[] = data.data || [];
       return list.map(m => m.id || m.display_name).filter(Boolean).sort();
@@ -63,8 +61,8 @@ export async function fetchModels(config: LLMConfig): Promise<string[]> {
     // Gemini 原生
     if (providerType === 'gemini') {
       const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-      const res = await fetch(url, { signal: controller.signal });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const res = await electronFetch(url, { timeout });
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       const data = await res.json();
       const list: any[] = data.models || [];
       return list
@@ -74,7 +72,4 @@ export async function fetchModels(config: LLMConfig): Promise<string[]> {
     }
 
     return [];
-  } finally {
-    clearTimeout(timer);
-  }
 }

@@ -4,6 +4,7 @@
 import {
   LLMProvider, LLMRequest, LLMResponse, LLMConfig, parseJsonResponse,
 } from './provider';
+import { electronFetch } from '../lib/electron-http';
 
 export class ClaudeAdapter implements LLMProvider {
   name = 'claude';
@@ -38,7 +39,7 @@ export class ClaudeAdapter implements LLMProvider {
         max_tokens: params.maxTokens ?? this.defaultMaxTokens,
       };
 
-      const res = await fetch(`${this.baseUrl}/messages`, {
+      const res = await electronFetch(`${this.baseUrl}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,6 +48,7 @@ export class ClaudeAdapter implements LLMProvider {
         },
         body: JSON.stringify(body),
         signal: controller.signal,
+        timeout: params.timeout || this.defaultTimeout,
       });
 
       if (!res.ok) {

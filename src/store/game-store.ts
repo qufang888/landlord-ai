@@ -52,6 +52,9 @@ interface AppSettings {
   defaultSpeed: number;
   mockEnabled: boolean;
   aiInteractionFreq: number;   // AI 互动频率 0~100：15 秒未出牌时触发催促/嘲讽动作的概率
+  customTaunts: string[];      // 自定义嘲讽话术；为空或清空则使用默认话术库
+  tauntRate: number;           // 嘲讽语音语速 0.5~2
+  tauntPitch: number;          // 嘲讽语音音高 0~2
 }
 
 // 游戏场配置
@@ -286,6 +289,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   settings: {
     theme: 'classic', backupPath: '', soundEnabled: true, gameHall: 'beginner',
     defaultSpeed: 1, mockEnabled: true, aiInteractionFreq: 60,
+    customTaunts: [], tauntRate: 1.1, tauntPitch: 1.0,
     ...(persisted?.settings ?? {}),
   },
   updateSettings: (s) => {
@@ -317,12 +321,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const freq = get().settings.aiInteractionFreq ?? 60;
     if (freq <= 0) return;
     if (Math.random() * 100 >= freq) return;
-    const text = pickPhrase('taunt');
+    // 优先使用用户自定义话术，否则回退到默认话术库
+    const settings = get().settings;
+    const custom = (settings.customTaunts && settings.customTaunts.length)
+      ? settings.customTaunts.map(t => t?.trim()).filter(Boolean)
+      : null;
+    const text = custom && custom.length
+      ? custom[Math.floor(Math.random() * custom.length)]
+      : pickPhrase('taunt');
     get().setTyping({ from, to });
     setTimeout(() => {
       get().setTyping(null);
       get().pushInteraction({ from, to, kind: 'phrase', category: 'taunt', text });
       audioManager.playSFX('taunt');
+      // 用 TTS 朗读嘲讽话术（语速/音高可自定义）
+      audioManager.speakText(text, { rate: settings.tauntRate, pitch: settings.tauntPitch });
       // 牌打得臭：扔番茄 / 倒水（负面动作）
       const action = randomNegativeAction();
       get().pushInteraction({ from, to, kind: 'action', action });

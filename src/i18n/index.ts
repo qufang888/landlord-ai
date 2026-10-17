@@ -159,6 +159,17 @@ const translations: Record<Language, Record<string, string>> = {
     profilesCount: '条配置',
     confirmDelete: '确认删除该配置？',
     saveProfile: '保存配置',
+    // 嘲讽语音编辑
+    openTauntEditor: '编辑嘲讽语音',
+    tauntEditorTitle: '编辑嘲讽语音',
+    tauntEditorDesc: '自定义 AI 嘲讽时所说的话，可逐条试听。留空或清空则使用默认话术。',
+    tauntAdd: '＋ 添加话术',
+    tauntPreview: '试听',
+    tauntReset: '恢复默认',
+    tauntRate: '语速',
+    tauntPitch: '音高',
+    tauntSave: '保存',
+    tauntSaved: '嘲讽语音已保存',
   },
 
   'en': {
@@ -286,6 +297,17 @@ const translations: Record<Language, Record<string, string>> = {
     profilesCount: 'profiles',
     confirmDelete: 'Delete this profile?',
     saveProfile: 'Save Profile',
+    // Taunt voice editor
+    openTauntEditor: 'Edit Taunt Voice',
+    tauntEditorTitle: 'Edit Taunt Voice',
+    tauntEditorDesc: 'Customize what the AI says when taunting. Preview each line. Leave empty to use defaults.',
+    tauntAdd: '+ Add line',
+    tauntPreview: 'Preview',
+    tauntReset: 'Restore default',
+    tauntRate: 'Rate',
+    tauntPitch: 'Pitch',
+    tauntSave: 'Save',
+    tauntSaved: 'Taunt voice saved',
   },
 
   'es': {

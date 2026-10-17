@@ -145,9 +145,16 @@ export class AudioManager {
     if (text) soundSynthesizer.speak(text, this.volumes.voice);
   }
 
+  /** 朗读任意文本（嘲讽语音 / 自定义话术）。可指定语速与音高。 */
+  speakText(text: string, opts?: { rate?: number; pitch?: number; volume?: number }): void {
+    soundSynthesizer.speak(text, opts?.volume ?? this.volumes.voice, {
+      rate: opts?.rate,
+      pitch: opts?.pitch,
+    });
+  }
+
   // 根据牌型播放对应语音
-  playCardVoice(cardType: string, rank?: number): void {
-    // 单牌
+  playCardVoice(cardType: string, rank?: number): void {    // 单牌
     if (cardType === 'single' && rank !== undefined) {
       const rankNames: Record<number, string> = {
         3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10',

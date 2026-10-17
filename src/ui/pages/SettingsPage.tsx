@@ -4,6 +4,7 @@ import { llmConfigManager, LLMConfig } from '../../llm';
 import { fetchModels, testConnection } from '../../llm/list-models';
 import { audioManager } from '../../audio/audio-manager';
 import { LANGUAGES, setLanguage, useTranslation } from '../../i18n';
+import TauntEditorModal from '../components/TauntEditorModal';
 
 const isDesktop = typeof window !== 'undefined' && !!(window as any).electronAPI;
 
@@ -28,6 +29,7 @@ export default function SettingsPage() {
   const [testing, setTesting] = useState<Record<number, boolean>>({});
   const [volumes, setVolumesState] = useState(audioManager.getVolumes());
   const [backupFolder, setBackupFolder] = useState(settings.backupPath || '');
+  const [showTauntEditor, setShowTauntEditor] = useState(false);
 
   useEffect(() => {
     setBackupFolder(settings.backupPath || '');
@@ -311,6 +313,20 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* 嘲讽语音设置 */}
+        <div className="bg-gray-800/50 rounded-lg p-4 mb-6">
+          <h3 className="text-white font-bold mb-3">{t('tauntEditorTitle')}</h3>
+          <p className="text-white/60 text-sm mb-3">
+            {t('tauntEditorDesc')}
+          </p>
+          <button
+            className="text-sm bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded"
+            onClick={() => setShowTauntEditor(true)}
+          >
+            🎙 {t('openTauntEditor')}
+          </button>
+        </div>
+
         {/* 对局设置 */}
         <div className="bg-gray-800/50 rounded-lg p-4 mb-6">
           <h3 className="text-white font-bold mb-3">{t('gameSettings')}</h3>
@@ -373,6 +389,8 @@ export default function SettingsPage() {
           <button className="btn-secondary flex-1" onClick={() => setPage('about')}>{t('about')}</button>
         </div>
       </div>
+
+      {showTauntEditor && <TauntEditorModal onClose={() => setShowTauntEditor(false)} />}
     </div>
   );
 }
