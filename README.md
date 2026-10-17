@@ -96,6 +96,20 @@ landlord-ai/
 - 炸弹 ×2 翻倍，王炸 ×4
 - 春天 / 反春天 ×2
 
+## 发布到 GitHub（受限网络）
+
+`scripts/` 下提供了两种推送方式：
+
+- **`github-init.sh` / `github-init.cmd`**：标准 git 推送流程，适用于可直连 `github.com` 的环境。
+- **`push-via-api.mjs`**：当网络代理只允许 `api.github.com`、禁止 `github.com` 的 git 协议隧道（CONNECT 502）时，改用 GitHub Git Database REST API 逐文件推送。用法：
+
+  ```bash
+  export GH_PAT=ghp_你的token
+  node scripts/push-via-api.mjs
+  ```
+
+> 说明：若仓库为空，脚本会先用 Contents API 播种首个 commit，再走 Git Database API。
+
 ## License
 
 [MIT](./LICENSE) © 2026 前方
