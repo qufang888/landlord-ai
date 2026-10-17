@@ -5,6 +5,7 @@ import { fetchModels, testConnection } from '../../llm/list-models';
 import { audioManager } from '../../audio/audio-manager';
 import { LANGUAGES, setLanguage, useTranslation } from '../../i18n';
 import TauntEditorModal from '../components/TauntEditorModal';
+import ApiKeyField from '../components/ApiKeyField';
 
 const isDesktop = typeof window !== 'undefined' && !!(window as any).electronAPI;
 
@@ -219,10 +220,12 @@ export default function SettingsPage() {
               {models.map(m => <option key={m} value={m} />)}
             </datalist>
           </label>
-          <label className="text-white/70">{t('apiKey')}
-            <input type="password" className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1"
+          <label className="text-white/70 block">{t('apiKey')}
+            <ApiKeyField
+              className="bg-gray-700 text-white rounded px-2 py-1"
               value={config.apiKey}
-              onChange={e => onChange({ ...config, apiKey: e.target.value })} />
+              onChange={v => onChange({ ...config, apiKey: v })}
+            />
           </label>
           <label className="text-white/70">{t('baseUrl')}
             <input className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1 disabled:opacity-50"

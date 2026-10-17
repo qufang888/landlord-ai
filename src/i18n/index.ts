@@ -170,6 +170,8 @@ const translations: Record<Language, Record<string, string>> = {
     tauntPitch: '音高',
     tauntSave: '保存',
     tauntSaved: '嘲讽语音已保存',
+    showApiKey: '显示明文',
+    hideApiKey: '隐藏明文',
   },
 
   'en': {
@@ -308,6 +310,8 @@ const translations: Record<Language, Record<string, string>> = {
     tauntPitch: 'Pitch',
     tauntSave: 'Save',
     tauntSaved: 'Taunt voice saved',
+    showApiKey: 'Show',
+    hideApiKey: 'Hide',
   },
 
   'es': {

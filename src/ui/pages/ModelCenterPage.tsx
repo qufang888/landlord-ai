@@ -3,6 +3,7 @@ import { useGameStore } from '../../store/game-store';
 import { useTranslation } from '../../i18n';
 import { modelProfileStore, ModelProfile, ModelProviderType } from '../../llm/model-profiles';
 import { llmConfigManager } from '../../llm';
+import ApiKeyField from '../components/ApiKeyField';
 
 type Draft = Omit<ModelProfile, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -222,8 +223,10 @@ export default function ModelCenterPage() {
                   value={draft.model} onChange={e => setDraft({ ...draft, model: e.target.value })} placeholder={t('modelPlaceholder')} />
               </label>
               <label className="block text-white/70">{t('apiKey')}
-                <input type="password" className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1.5"
-                  value={draft.apiKey} onChange={e => setDraft({ ...draft, apiKey: e.target.value })} />
+                <ApiKeyField
+                  className="text-white rounded px-2 py-1.5"
+                  value={draft.apiKey} onChange={v => setDraft({ ...draft, apiKey: v })}
+                />
               </label>
               <label className="block text-white/70">{t('baseUrl')}
                 <input className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1.5"

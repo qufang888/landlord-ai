@@ -3,6 +3,7 @@ import { useGameStore } from '../../store/game-store';
 import { llmConfigManager, LLMConfig } from '../../llm';
 import { fetchModels } from '../../llm/list-models';
 import { useTranslation } from '../../i18n';
+import ApiKeyField from '../components/ApiKeyField';
 
 export default function GuidePage() {
   const setPage = useGameStore(s => s.setPage);
@@ -148,9 +149,11 @@ export default function GuidePage() {
               </label>
               <label className="block">
                 <span className="text-white/70">{t('apiKey')}</span>
-                <input type="password" className="w-full mt-1 bg-gray-700 rounded px-2 py-2"
+                <ApiKeyField
+                  className="rounded px-2 py-2"
                   value={config.apiKey}
-                  onChange={e => setConfig({ ...config, apiKey: e.target.value })} />
+                  onChange={v => setConfig({ ...config, apiKey: v })}
+                />
               </label>
               <label className="block">
                 <span className="text-white/70">{t('baseUrl')}</span>
