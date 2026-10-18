@@ -292,8 +292,8 @@ export default function SettingsPage() {
                 className={`rounded-lg p-2 cursor-pointer text-center transition-all ${theme === key ? 'ring-2 ring-gold' : 'opacity-70 hover:opacity-100'}`}
                 style={{ background: THEME_CONFIG[key].bg }}
                 onClick={() => setTheme(key)}
-                title={THEME_CONFIG[key].name}>
-                <div className="text-white text-xs font-medium truncate">{THEME_CONFIG[key].name}</div>
+                title={t(THEME_CONFIG[key].name)}>
+                <div className="text-white text-xs font-medium truncate">{t(THEME_CONFIG[key].name)}</div>
               </div>
             ))}
           </div>

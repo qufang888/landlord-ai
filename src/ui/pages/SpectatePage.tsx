@@ -118,10 +118,10 @@ export default function SpectatePage() {
             <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 
               flex items-center justify-center text-white font-bold
               ${aiThinking === 0 ? 'ring-4 ring-gold animate-pulse' : ''}`}>
-              {players[0].name[0]}
+              {seatName(0)[0]}
             </div>
             <div>
-              <div className="text-white text-sm font-bold">{players[0].name}</div>
+              <div className="text-white text-sm font-bold">{seatName(0)}</div>
               <div className="text-gold text-xs">
                 {players[0].role === 'landlord' ? t('landlord') : players[0].role === 'farmer' ? t('farmer') : ''}
               </div>

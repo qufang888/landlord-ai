@@ -119,7 +119,7 @@ export default function GamePage() {
               onClick={() => controlledSeats.includes(id) ? setActiveSeat(id) : toggleControl(id)}
               title={controlledSeats.includes(id) ? t('switchView') : t('takeOver')}
             >
-              {id === 0 ? t('you') : `AI${id}`}
+              {id === 0 ? t('you') : seatName(id)}
             </button>
           ))}
         </div>
@@ -185,7 +185,7 @@ export default function GamePage() {
         {lastPlayedCards.length > 0 && (
           <div className="flex flex-col items-center">
             <span className="text-white/60 text-sm mb-2">
-              {players[lastPlayedBy]?.name ?? ''}
+              {lastPlayedBy != null ? seatName(lastPlayedBy) : ''}
             </span>
             <div className="flex gap-1">
               {lastPlayedCards.map((card, i) => (

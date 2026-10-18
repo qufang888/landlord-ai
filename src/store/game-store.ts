@@ -66,24 +66,24 @@ export const HALL_CONFIG: Record<GameHall, { name: string; minCoins: number; mul
   custom: { name: '自定义场', minCoins: 0, multiplier: 1, desc: '自由设置，无上限' },
 };
 
-// 主题配置（共 15 套，互不雷同、配色协调）
+// 主题配置（共 15 套，互不雷同、配色协调）。name 字段为 i18n key，由界面用 t() 渲染
 export const THEME_CONFIG: Record<ThemeName, { name: string; bg: string; tableBg: string; primary: string }> = {
-  classic: { name: '经典绿桌', bg: 'radial-gradient(ellipse at center, #1a6b3c 0%, #0f4d2a 100%)', tableBg: '#1a6b3c', primary: '#d4a843' },
-  dark: { name: '暗夜黑金', bg: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1a 100%)', tableBg: '#16213e', primary: '#e94560' },
-  blue: { name: '深蓝海洋', bg: 'radial-gradient(ellipse at center, #0f3460 0%, #0a2647 100%)', tableBg: '#0f3460', primary: '#00d9ff' },
-  wood: { name: '复古木纹', bg: 'radial-gradient(ellipse at center, #4a3728 0%, #2d1f14 100%)', tableBg: '#5c4033', primary: '#ffd700' },
-  neon: { name: '赛博霓虹', bg: 'radial-gradient(ellipse at center, #1a0a2e 0%, #0d021a 100%)', tableBg: '#16213e', primary: '#00ffcc' },
+  classic: { name: 'themeClassic', bg: 'radial-gradient(ellipse at center, #1a6b3c 0%, #0f4d2a 100%)', tableBg: '#1a6b3c', primary: '#d4a843' },
+  dark: { name: 'themeDark', bg: 'radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1a 100%)', tableBg: '#16213e', primary: '#e94560' },
+  blue: { name: 'themeBlue', bg: 'radial-gradient(ellipse at center, #0f3460 0%, #0a2647 100%)', tableBg: '#0f3460', primary: '#00d9ff' },
+  wood: { name: 'themeWood', bg: 'radial-gradient(ellipse at center, #4a3728 0%, #2d1f14 100%)', tableBg: '#5c4033', primary: '#ffd700' },
+  neon: { name: 'themeNeon', bg: 'radial-gradient(ellipse at center, #1a0a2e 0%, #0d021a 100%)', tableBg: '#16213e', primary: '#00ffcc' },
   // —— 新增 10 套 ——
-  jade: { name: '翡翠青玉', bg: 'radial-gradient(ellipse at center, #0f3d3a 0%, #06231f 100%)', tableBg: '#0f3d3a', primary: '#34d399' },
-  rose: { name: '玫瑰粉金', bg: 'radial-gradient(ellipse at center, #4a1d3a 0%, #2a0e22 100%)', tableBg: '#4a1d3a', primary: '#f472b6' },
-  sunset: { name: '晚霞橙紫', bg: 'radial-gradient(ellipse at center, #7a3b2e 0%, #3a1f3d 100%)', tableBg: '#7a3b2e', primary: '#fb923c' },
-  midnight: { name: '午夜靛蓝', bg: 'radial-gradient(ellipse at center, #1e1b4b 0%, #0b0a1f 100%)', tableBg: '#1e1b4b', primary: '#818cf8' },
-  aurora: { name: '极光幻彩', bg: 'radial-gradient(ellipse at center, #2a1a4a 0%, #0d2b3a 100%)', tableBg: '#2a1a4a', primary: '#a78bfa' },
-  sand: { name: '大漠流金', bg: 'radial-gradient(ellipse at center, #5c4a32 0%, #2e2417 100%)', tableBg: '#5c4a32', primary: '#fbbf24' },
-  plum: { name: '紫梅幽香', bg: 'radial-gradient(ellipse at center, #3b1d4f 0%, #1a0d2e 100%)', tableBg: '#3b1d4f', primary: '#c084fc' },
-  ocean: { name: '碧海青蓝', bg: 'radial-gradient(ellipse at center, #0c4a6e 0%, #062436 100%)', tableBg: '#0c4a6e', primary: '#38bdf8' },
-  ember: { name: '赤焰烈火', bg: 'radial-gradient(ellipse at center, #5c1a1a 0%, #2b0d0d 100%)', tableBg: '#5c1a1a', primary: '#f87171' },
-  frost: { name: '霜雪冷白', bg: 'radial-gradient(ellipse at center, #243b53 0%, #0f1c2e 100%)', tableBg: '#243b53', primary: '#bae6fd' },
+  jade: { name: 'themeJade', bg: 'radial-gradient(ellipse at center, #0f3d3a 0%, #06231f 100%)', tableBg: '#0f3d3a', primary: '#34d399' },
+  rose: { name: 'themeRose', bg: 'radial-gradient(ellipse at center, #4a1d3a 0%, #2a0e22 100%)', tableBg: '#4a1d3a', primary: '#f472b6' },
+  sunset: { name: 'themeSunset', bg: 'radial-gradient(ellipse at center, #7a3b2e 0%, #3a1f3d 100%)', tableBg: '#7a3b2e', primary: '#fb923c' },
+  midnight: { name: 'themeMidnight', bg: 'radial-gradient(ellipse at center, #1e1b4b 0%, #0b0a1f 100%)', tableBg: '#1e1b4b', primary: '#818cf8' },
+  aurora: { name: 'themeAurora', bg: 'radial-gradient(ellipse at center, #2a1a4a 0%, #0d2b3a 100%)', tableBg: '#2a1a4a', primary: '#a78bfa' },
+  sand: { name: 'themeSand', bg: 'radial-gradient(ellipse at center, #5c4a32 0%, #2e2417 100%)', tableBg: '#5c4a32', primary: '#fbbf24' },
+  plum: { name: 'themePlum', bg: 'radial-gradient(ellipse at center, #3b1d4f 0%, #1a0d2e 100%)', tableBg: '#3b1d4f', primary: '#c084fc' },
+  ocean: { name: 'themeOcean', bg: 'radial-gradient(ellipse at center, #0c4a6e 0%, #062436 100%)', tableBg: '#0c4a6e', primary: '#38bdf8' },
+  ember: { name: 'themeEmber', bg: 'radial-gradient(ellipse at center, #5c1a1a 0%, #2b0d0d 100%)', tableBg: '#5c1a1a', primary: '#f87171' },
+  frost: { name: 'themeFrost', bg: 'radial-gradient(ellipse at center, #243b53 0%, #0f1c2e 100%)', tableBg: '#243b53', primary: '#bae6fd' },
 };
 
 // 当前"被压"的领出牌线索（用于判定"该压没压 / 浪费炸弹"），随对局推进维护
