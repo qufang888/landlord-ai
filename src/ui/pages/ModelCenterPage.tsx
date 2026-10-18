@@ -7,17 +7,17 @@ import ApiKeyField from '../components/ApiKeyField';
 
 type Draft = Omit<ModelProfile, 'id' | 'createdAt' | 'updatedAt'>;
 
-const PROVIDER_LABELS: Record<ModelProviderType, string> = {
-  openai_native: 'OpenAI 原生',
-  openai_compatible: 'OpenAI 兼容',
-  claude_native: 'Claude 原生',
-  claude_compatible: 'Claude 兼容',
-  gemini: 'Gemini',
+const PROVIDER_I18N_KEYS: Record<ModelProviderType, string> = {
+  openai_native: 'openaiNative',
+  openai_compatible: 'openaiCompatible',
+  claude_native: 'claudeNative',
+  claude_compatible: 'claudeCompatible',
+  gemini: 'geminiNative',
 };
 
-function emptyDraft(): Draft {
+function emptyDraft(t: (k: string) => string): Draft {
   return {
-    name: '', category: '未分类', tags: [], providerType: 'openai_native',
+    name: '', category: t('categoryDefault'), tags: [], providerType: 'openai_native',
     model: '', apiKey: '', baseUrl: 'https://api.openai.com/v1',
     temperature: 0.5, maxTokens: 2000, timeout: 120000, notes: '',
   };
@@ -32,7 +32,7 @@ export default function ModelCenterPage() {
   const [catFilter, setCatFilter] = useState<string>('');
   const [tagFilter, setTagFilter] = useState<string>('');
   const [editing, setEditing] = useState<ModelProfile | null>(null);
-  const [draft, setDraft] = useState<Draft>(emptyDraft());
+  const [draft, setDraft] = useState<Draft>(() => emptyDraft(t));
   const [tagInput, setTagInput] = useState('');
   const [toast, setToast] = useState('');
 
@@ -53,7 +53,7 @@ export default function ModelCenterPage() {
 
   const openNew = () => {
     setEditing(null);
-    setDraft(emptyDraft());
+    setDraft(emptyDraft(t));
     setTagInput('');
   };
 
@@ -71,14 +71,14 @@ export default function ModelCenterPage() {
     raw.split(/[,，、\s]+/).map(s => s.trim()).filter(Boolean);
 
   const saveDraft = () => {
-    if (!draft.name.trim()) { flash('请填写配置名称'); return; }
+    if (!draft.name.trim()) { flash(t('mcNameRequired')); return; }
     const finalDraft: Draft = { ...draft, tags: commitTags(tagInput), name: draft.name.trim() };
     if (editing) {
       modelProfileStore.update(editing.id, finalDraft);
-      flash('已保存');
+      flash(t('mcSaved'));
     } else {
       modelProfileStore.add(finalDraft);
-      flash('已新建');
+      flash(t('mcCreated'));
     }
     setEditing(null);
     refresh();
@@ -88,17 +88,17 @@ export default function ModelCenterPage() {
     if (!confirm(t('confirmDelete'))) return;
     modelProfileStore.remove(p.id);
     refresh();
-    flash('已删除');
+    flash(t('mcDeleted'));
   };
 
   const assignToSeat = (p: ModelProfile, seat: number) => {
     llmConfigManager.setSeatConfig(seat, modelProfileStore.toLLMConfig(p));
-    flash(`「${p.name}」已指派到座位 ${seat}`);
+    flash(`${p.name} ${t('mcAssigned')} ${seat}`);
   };
 
   const duplicate = (p: ModelProfile) => {
     const { id, createdAt, updatedAt, ...rest } = p;
-    modelProfileStore.add({ ...rest, name: p.name + ' 副本' });
+    modelProfileStore.add({ ...rest, name: p.name + ' ' + t('copyProfile') });
     refresh();
   };
 
@@ -162,7 +162,7 @@ export default function ModelCenterPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="text-white font-bold text-lg">{p.name}</div>
-                    <div className="text-xs text-white/50">{PROVIDER_LABELS[p.providerType]} · {p.model || '—'}</div>
+                    <div className="text-xs text-white/50">{t(PROVIDER_I18N_KEYS[p.providerType])} · {p.model || '—'}</div>
                   </div>
                   <span className="text-xs bg-gray-700 text-white/80 px-2 py-0.5 rounded">{p.category}</span>
                 </div>
@@ -182,7 +182,7 @@ export default function ModelCenterPage() {
                     <span className="text-xs text-white/60">{t('assignToSeat')}:</span>
                     {[0, 1, 2].map(s => (
                       <button key={s} className="text-xs bg-emerald-700 hover:bg-emerald-800 text-white px-2 py-1 rounded"
-                        onClick={() => assignToSeat(p, s)} title={`座位 ${s}`}>{s}</button>
+                        onClick={() => assignToSeat(p, s)} title={`${t('seat')} ${s}`}>{s}</button>
                     ))}
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export default function ModelCenterPage() {
                   <select className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1.5"
                     value={draft.providerType}
                     onChange={e => setDraft({ ...draft, providerType: e.target.value as ModelProviderType })}>
-                    {Object.entries(PROVIDER_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    {Object.entries(PROVIDER_I18N_KEYS).map(([k, key]) => <option key={k} value={k}>{t(key)}</option>)}
                   </select>
                 </label>
               </div>
@@ -248,7 +248,7 @@ export default function ModelCenterPage() {
               </div>
               <label className="block text-white/70">{t('tagsInput')}
                 <input className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1.5"
-                  value={tagInput} onChange={e => setTagInput(e.target.value)} placeholder="如：强、本地、国产" />
+                  value={tagInput} onChange={e => setTagInput(e.target.value)} placeholder={t('tagPlaceholder')} />
               </label>
               <label className="block text-white/70">{t('notes')}
                 <textarea className="w-full mt-1 bg-gray-700 text-white rounded px-2 py-1.5 h-16 resize-none"

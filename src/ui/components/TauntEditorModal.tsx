@@ -53,7 +53,7 @@ export default function TauntEditorModal({ onClose }: Props) {
   // 试听一条随机（用于整体预览语速/音高效果）
   const previewRandom = () => {
     const pool = taunts.map(x => x.trim()).filter(Boolean);
-    const text = pool.length ? pool[Math.floor(Math.random() * pool.length)] : '你的牌打得也太臭了';
+    const text = pool.length ? pool[Math.floor(Math.random() * pool.length)] : t('tauntPreviewFallback');
     audioManager.speakText(text, { rate, pitch });
   };
 
@@ -102,7 +102,7 @@ export default function TauntEditorModal({ onClose }: Props) {
           <div className="space-y-2 mb-4">
             {taunts.length === 0 && (
               <div className="text-white/40 text-sm italic py-2">
-                （{t('tauntReset')} · 当前使用默认话术库）
+                （{t('tauntReset')} · {t('tauntDefaultLib')}）
               </div>
             )}
             {taunts.map((line, idx) => (
@@ -122,7 +122,7 @@ export default function TauntEditorModal({ onClose }: Props) {
                 >🔊</button>
                 <button
                   className="px-2 py-2 rounded text-sm bg-white/10 text-white/70 hover:text-red-300 shrink-0"
-                  title="删除"
+                  title={t('deleteBtn')}
                   onClick={() => removeTaunt(idx)}
                 >🗑</button>
               </div>

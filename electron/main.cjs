@@ -11,6 +11,7 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 640,
     frame: false,            // 无边框：使用软件自定义标题栏（适配自身 UI）
+    show: false,             // 先隐藏，内容（含启动界面）就绪后再显示，杜绝原生黑框/空白闪烁
     title: '弈牌AI',
     backgroundColor: '#0f1115',
     icon: path.join(__dirname, '../assets/images/icon.png'),
@@ -20,6 +21,15 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.cjs'),
     },
   });
+
+  // 内容就绪后再显示窗口（index.html 自带启动界面，加载期间不会露出黑框）
+  mainWindow.once('ready-to-show', () => {
+    if (!mainWindow.isDestroyed()) mainWindow.show();
+  });
+  // 兜底：若 3 秒内仍未触发 ready-to-show（如加载异常），强制显示，避免窗口卡死不可见
+  setTimeout(() => {
+    if (!mainWindow.isDestroyed() && !mainWindow.isVisible()) mainWindow.show();
+  }, 3000);
 
   // 开发模式加载 vite dev server，生产模式加载本地文件
   if (process.env.VITE_DEV_SERVER_URL) {

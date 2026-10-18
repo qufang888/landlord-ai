@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGameStore, THEME_CONFIG } from '../../store/game-store';
+import { useTranslation } from '../../i18n';
 
 /**
  * 自定义标题栏（仅 Electron 桌面端渲染）。
@@ -11,6 +12,7 @@ export default function TitleBar() {
   const themeConfig = THEME_CONFIG[theme];
   const primary = themeConfig.primary;
   const [maximized, setMaximized] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const api = (window as any).electronAPI;
@@ -32,20 +34,20 @@ export default function TitleBar() {
       } as React.CSSProperties}
     >
       <div className="px-3 text-sm font-semibold tracking-wide" style={{ color: primary }}>
-        🃏 弈牌AI
+        🃏 {t('appName')}
       </div>
       <div className="flex-1" />
       <div className="flex items-center h-full">
         <button
           className="h-full w-11 flex items-center justify-center text-white/80 hover:bg-white/10"
           style={btnStyle}
-          title="最小化"
+          title={t('minimize')}
           onClick={() => api?.windowMinimize?.()}
         >—</button>
         <button
           className="h-full w-11 flex items-center justify-center text-white/80 hover:bg-white/10"
           style={btnStyle}
-          title={maximized ? '还原' : '最大化'}
+          title={maximized ? t('restore') : t('maximize')}
           onClick={() => {
             api?.windowMaximize?.();
             setTimeout(() => api?.windowIsMaximized?.().then((m: boolean) => setMaximized(!!m)).catch(() => {}), 120);
@@ -54,7 +56,7 @@ export default function TitleBar() {
         <button
           className="h-full w-11 flex items-center justify-center text-white/80 hover:bg-red-600 hover:text-white"
           style={btnStyle}
-          title="关闭"
+          title={t('close')}
           onClick={() => api?.windowClose?.()}
         >✕</button>
       </div>

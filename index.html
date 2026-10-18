@@ -4,9 +4,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1280, height=800" />
     <title>弈牌AI - 斗地主</title>
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; background: #0f1115; }
+      #splash {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: radial-gradient(ellipse at center, #1a6b3c 0%, #0f4d2a 100%);
+        color: #fff;
+        font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        transition: opacity 0.4s ease;
+      }
+      #splash.splash-hidden { opacity: 0; }
+      .splash-logo {
+        font-size: 56px; font-weight: 800; letter-spacing: 4px; color: #d4a843;
+        text-shadow: 0 4px 20px rgba(212,168,67,0.35);
+      }
+      .splash-sub { margin-top: 8px; font-size: 16px; color: rgba(255,255,255,0.72); }
+      .splash-spinner {
+        margin-top: 30px; width: 38px; height: 38px; border-radius: 50%;
+        border: 4px solid rgba(255,255,255,0.18); border-top-color: #d4a843;
+        animation: splash-spin 0.9s linear infinite;
+      }
+      .splash-tip { margin-top: 16px; font-size: 13px; color: rgba(255,255,255,0.55); }
+      @keyframes splash-spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body class="bg-felt overflow-hidden">
+    <!-- 启动界面：React 挂载后由 main.tsx 淡出移除，避免无内容时的黑框闪烁 -->
+    <div id="splash">
+      <div class="splash-logo">🃏 弈牌AI</div>
+      <div class="splash-sub">AI 驱动的智能斗地主</div>
+      <div class="splash-spinner"></div>
+      <div class="splash-tip" id="splash-tip">加载中…</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // 依据浏览器语言本地化启动提示（静态阶段无法走 React i18n）
+      (function () {
+        var tip = document.getElementById('splash-tip');
+        if (tip) {
+          var lang = (navigator.language || 'zh').toLowerCase();
+          tip.textContent = lang.startsWith('zh') ? '加载中…' : 'Loading…';
+        }
+      })();
+    </script>
   </body>
 </html>

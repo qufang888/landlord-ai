@@ -12,3 +12,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
+
+// 启动界面：React 首帧绘制完成后淡出并移除 splash，避免内容就绪前的黑框/空白
+const splash = document.getElementById('splash');
+if (splash) {
+  requestAnimationFrame(() => {
+    splash.classList.add('splash-hidden');
+    setTimeout(() => splash.remove(), 450);
+  });
+}

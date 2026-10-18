@@ -1,10 +1,12 @@
 import { useGameStore } from '../../store/game-store';
 import { audioManager } from '../../audio/audio-manager';
+import { useTranslation } from '../../i18n';
 
 export default function MainMenu() {
   const setPage = useGameStore(s => s.setPage);
   const setGameMode = useGameStore(s => s.setGameMode);
   const startGame = useGameStore(s => s.startGame);
+  const { t } = useTranslation();
 
   const handleHumanVsAI = () => {
     setGameMode('human_vs_ai');
@@ -29,30 +31,30 @@ export default function MainMenu() {
   return (
     <div className="w-full h-full table-bg flex flex-col items-center justify-center">
       <h1 className="text-6xl font-bold text-gold mb-2 tracking-wider" style={{ textShadow: '0 4px 20px rgba(212,168,67,0.3)' }}>
-        弈牌AI
+        {t('appName')}
       </h1>
-      <p className="text-white/70 mb-12 text-lg">AI 驱动的智能斗地主</p>
+      <p className="text-white/70 mb-12 text-lg">{t('appTagline')}</p>
 
       <div className="flex flex-col gap-4 w-80">
         <button
           className="btn-primary text-lg py-3 transform hover:scale-105 transition-transform"
           onClick={handleHumanVsAI}
         >
-          🎮 人机对战
+          🎮 {t('modeHumanVsAI')}
         </button>
 
         <button
           className="btn-primary text-lg py-3 transform hover:scale-105 transition-transform"
           onClick={handleHumanFarmer}
         >
-          🤝 合作模式（农民）
+          🤝 {t('modeCoopFarmer')}
         </button>
 
         <button
           className="btn-secondary text-lg py-3 transform hover:scale-105 transition-transform"
           onClick={handleSpectate}
         >
-          👁 AI 观战
+          👁 {t('modeSpectate')}
         </button>
 
         <div className="flex gap-4 mt-4">
@@ -60,19 +62,19 @@ export default function MainMenu() {
             className="btn-secondary flex-1"
             onClick={() => setPage('settings')}
           >
-            ⚙ 设置
+            ⚙ {t('settings')}
           </button>
           <button
             className="btn-secondary flex-1"
             onClick={() => setPage('about')}
           >
-            ℹ 关于
+            ℹ {t('about')}
           </button>
         </div>
       </div>
 
       <p className="absolute bottom-4 text-white/40 text-sm">
-        MIT License © 2026 前方
+        {t('copyright')}
       </p>
     </div>
   );
